@@ -2,12 +2,18 @@ body {
   background-color: #2d394d;
 }
 
+.App {
+  position: relative;
+  margin: 2rem 10rem;
+  border: 1px solid white;
+  height: 90vh;
+}
+
 .navbar {
   display: flex;
   flex-direction: row;
   max-height: 20px;
   align-items: center;
-  margin: 2rem 10rem;
 }
 
 .logo {
@@ -32,7 +38,9 @@ body {
 }
 
 .words {
-  margin: 10rem 10rem auto 10rem;
+  position: absolute;
+  top: 14rem;
+  margin: auto;
   overflow: hidden;
   height: 7rem;
 }
@@ -45,4 +53,41 @@ body {
   font-size: 1.6rem;
   color: #4a768d;
   line-height: 1.5rem;
+  /* letter-spacing: 1px; */
+}
+
+
+@keyframes blink{
+  0%{
+      opacity: 1;
+  }
+  50%{
+      opacity: 0;
+  }
+  100%{
+      opacity: 1;
+  }
+}
+
+.cursor{
+  position: absolute;
+  top: 264px;  /*264  300*/ 
+  left: 174px; /*174  188*/
+  width: .15em;
+  height: 1.5em;
+  background: #ff7a90;
+  position: fixed;
+  animation: blink 1s infinite;
+  transition: all 100ms;
+  border-radius: 10px;
+}
+
+.correct {
+  color: #fffaf8;
+
+}
+
+.incorrect {
+  color: #ee2a3a;
+
 }
