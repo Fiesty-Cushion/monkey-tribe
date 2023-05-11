@@ -1,12 +1,12 @@
 import "./App.css";
 import NavBar from "./components/NavBar";
-import Main from "./components/Main";
+import Game from "./components/Game";
 
 function App() {
   return (
     <div className="App">
       <NavBar />
-      <Main />
+      <Game />
     </div>
   );
 }
