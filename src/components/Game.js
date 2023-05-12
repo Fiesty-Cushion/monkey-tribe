@@ -26,7 +26,7 @@ function Game() {
   }, []);
 
   function addClass(element, name) {
-    if (element.className.split(" ")[1] != name) {
+    if (!element.className.includes(name)) {
       element.className += " " + name;
     }
     return;
@@ -56,6 +56,7 @@ function Game() {
         const expected = currentLetter ? currentLetter.innerHTML : " ";
         const isKey = key.length == 1 && key != " ";
         const isSpace = key == " ";
+        const cursor = document.querySelector(".cursor");
 
         if (key == expected) {
           if (isKey) {
@@ -75,8 +76,40 @@ function Game() {
         }
 
         if (key == "Backspace") {
-          removeClass(currentLetter.previousSibling, "correct" || "incorrect");
-          // TODO implement Backspace functionality
+          if (currentLetter) {
+            if (currentLetter.previousSibling) {
+              currentLetter.previousSibling.className.split(" ")[1] ==
+              "incorrect"
+                ? removeClass(currentLetter.previousSibling, "incorrect")
+                : removeClass(currentLetter.previousSibling, "correct");
+              addClass(currentLetter.previousSibling, "current");
+              removeClass(currentLetter, "current");
+              cursor.style.top =
+                currentLetter.previousSibling.getBoundingClientRect().top +
+                4 +
+                "px";
+              cursor.style.left =
+                currentLetter.previousSibling.getBoundingClientRect().left +
+                "px";
+            }
+          } else {
+            if (currentWord.lastChild.className.includes("extra")) {
+              currentWord.lastChild.remove();
+              cursor.style.top =
+                currentWord.lastChild.getBoundingClientRect().top + 4 + "px";
+              cursor.style.left =
+                currentWord.lastChild.getBoundingClientRect().right + "px";
+            } else {
+              currentWord.lastChild.className.split(" ")[1] == "incorrect"
+                ? removeClass(currentWord.lastChild, "incorrect")
+                : removeClass(currentWord.lastChild, "correct");
+              addClass(currentWord.lastChild, "current");
+              cursor.style.top =
+                currentWord.lastChild.getBoundingClientRect().top + 4 + "px";
+              cursor.style.left =
+                currentWord.lastChild.getBoundingClientRect().left + "px";
+            }
+          }
         }
 
         if (key != expected && expected != " " && key != "Backspace") {
@@ -84,16 +117,19 @@ function Game() {
           removeClass(currentLetter, "current");
           if (currentLetter.nextSibling) {
             addClass(currentLetter.nextSibling, "current");
-          } else {
-            if (!document.querySelector(".words").lastChild) {
-              addClass(currentWord.nextSibling.firstChild, "current");
-              addClass(currentWord.nextSibling, "current");
-              removeClass(currentWord, "current");
-            }
           }
         }
 
-        const cursor = document.querySelector(".cursor");
+        if (expected == " " && key != expected && isKey) {
+          const errorLetter = currentWord.appendChild(
+            document.createElement("span")
+          );
+          errorLetter.innerHTML = key;
+          addClass(errorLetter, "letter");
+          addClass(errorLetter, "incorrect");
+          addClass(errorLetter, "extra");
+        }
+
         if (isKey) {
           cursor.style.animation = "none";
         }
@@ -104,7 +140,7 @@ function Game() {
             cursor.style.left =
               currentLetter.getBoundingClientRect().right + "px";
           } else {
-            if (currentWord.nextSibling) {
+            if (currentWord.nextSibling && key == " ") {
               cursor.style.top =
                 currentWord.nextSibling.firstChild.getBoundingClientRect().top +
                 4 +
@@ -112,8 +148,21 @@ function Game() {
               cursor.style.left =
                 currentWord.nextSibling.firstChild.getBoundingClientRect()
                   .left + "px";
+            } else {
+              cursor.style.top =
+                currentWord.lastChild.getBoundingClientRect().top + 4 + "px";
+              cursor.style.left =
+                currentWord.lastChild.getBoundingClientRect().right + "px";
             }
           }
+        }
+
+        if (currentWord.previousSibling) {
+          currentWord.previousSibling.childNodes.forEach((node) => {
+            if (node.className.includes("incorrect")) {
+              addClass(currentWord.previousSibling, "incorrect");                            
+            }
+          });
         }
       });
     }
