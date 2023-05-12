@@ -89,5 +89,9 @@ body {
 
 .incorrect {
   color: #ee2a3a;
+}
 
+.word.incorrect {
+  text-decoration: underline;
+  text-decoration-color: #ee2a3a;
 }
